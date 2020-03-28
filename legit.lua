@@ -1,8 +1,8 @@
 --- Auto updater Variables
 local SCRIPT_FILE_NAME = GetScriptName();
-local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/new/master";
-local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/superyor/RageSU/master/RageSU%20Beta.lua"
-local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/superyor/RageSU/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
+local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
+local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/betalegit.lua"
+local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
 local VERSION_NUMBER = "4.1"; --- This too
 local version_check_done = false;
 local update_downloaded = false;
@@ -14,6 +14,26 @@ local isBeta = true;
 local GOTZY_UPDATER_TAB = gui.Tab(gui.Reference("Settings"), "gotzy.updater.tab", "Gotzy™ Autoupdater")
 local GOTZY_UPDATER_GROUP = gui.Groupbox(GOTZY_UPDATER_TAB, "Auto Updater for Gotzy™ | v" .. VERSION_NUMBER, 15, 15, 600, 600)
 local GOTZY_UPDATER_TEXT = gui.Text(GOTZY_UPDATER_GROUP, "")
+
+local function betaUpdate()
+
+    if not isBeta then
+        if not betaUpdateDownloaded then
+            local beta_version_content = http.Get(BETA_SCIPT_FILE_ADDR);
+            local old_script = file.Open(SCRIPT_FILE_NAME, "w");
+            old_script:Write(beta_version_content);
+            old_script:Close();
+            betaUpdateDownloaded = true;
+            GOTZY_UPDATER_TEXT:SetText("Downloaded the Beta Client! Please reload the script.")
+        end
+    end
+end
+
+local GOTZY_UPDATER_BETABUTTON = gui.Button(GOTZY_UPDATER_GROUP, "Download Beta Client", betaUpdate)
+local GOTZY_CHANGELOG_CONTENT = http.Get("https://raw.githubusercontent.com/superyor/RageSU/master/changelog.txt")
+if GOTZY_CHANGELOG_CONTENT ~= nil or GOTZY_CHANGELOG_CONTENT ~= "" then
+    local GOTZY_CHANGELOG_TEXT = gui.Text(GOTZY_UPDATER_GROUP, GOTZY_CHANGELOG_CONTENT)
+end
 
 local GOTZY_CHANGELOG_CONTENT = http.Get("https://raw.githubusercontent.com/superyor/RageSU/master/changelog.txt")
 if GOTZY_CHANGELOG_CONTENT ~= nil or GOTZY_CHANGELOG_CONTENT ~= "" then
@@ -276,3 +296,39 @@ local function Visuals_Disable_Post_Processing()
    end
 
 callbacks.Register("Draw", "Custom Viewmodel Editor", Visuals_Viewmodel)
+
+--- Auto updater by ShadyRetard/Shady#0001 aka stole from RageSu
+local function handleUpdates()
+
+    if (update_available and not update_downloaded) then
+        GOTZY_UPDATER_TEXT:SetText("Update is getting downloaded.")
+        local new_version_content = http.Get(SCRIPT_FILE_ADDR);
+        local old_script = file.Open(SCRIPT_FILE_NAME, "w");
+        old_script:Write(new_version_content);
+        old_script:Close();
+        update_available = false;
+        update_downloaded = true;
+    end
+
+    if (update_downloaded) then
+        GOTZY_UPDATER_TEXT:SetText("Update available, please reload the script.")
+        return;
+    end
+
+    if (not version_check_done) then
+        version_check_done = true;
+        local version = http.Get(VERSION_FILE_ADDR);
+        if (version ~= VERSION_NUMBER) then
+            update_available = true;
+        end
+        if not betaUpdateDownloaded then
+            if isBeta then
+                GOTZY_UPDATER_TEXT:SetText("You are using the newest Beta client. Current Version: v" .. VERSION_NUMBER .. " Beta Build")
+            else
+                GOTZY_UPDATER_TEXT:SetText("Your client is up to date. Current Version: v" .. VERSION_NUMBER .. " Stable Build")
+            end
+        end
+    end
+end
+
+callbacks.Register("Draw", handleUpdates)
