@@ -1,6 +1,6 @@
 Changelog:
 
-[Release 1.1]
+[Release 1.21]
 * Added strafe fix (U wont jump forward when trying to throw a smoke, etc)
 * Fov changer (stole it from someone xd)
 * Sniper crosshair
