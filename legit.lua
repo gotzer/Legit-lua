@@ -618,7 +618,7 @@ local function handleUpdates()
     end
 
     if (update_downloaded) then
-        GOTZY_UPDATER_TEXT:SetText("Update available, please reload the script.")
+        GOTZY_UPDATER_TEXT:SetText("Updates everytime when loaded.")
         return;
     end
 
