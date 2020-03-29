@@ -8,7 +8,7 @@ local version_check_done = false;
 local update_downloaded = false;
 local update_available = false;
 local betaUpdateDownloaded = false;
-local isBeta = true;
+local isBeta = false;
 
 --- Auto Updater GUI Stuff
 local GOTZY_UPDATER_TAB = gui.Tab(gui.Reference("Settings"), "gotzy.updater.tab", "Gotzy™ Autoupdater")
@@ -46,7 +46,7 @@ local group_1 = gui.Groupbox( tab, "Visuals", 15, 15, 315);
 local group_2 = gui.Groupbox( tab, "Viewmodel changer", 345, 15, 275);
 local group_3 = gui.Groupbox( tab, "2", 345, 305, 275);
 local group_4 = gui.Groupbox( tab, "3", 15, 305, 315);
-local ref = gui.Reference("Misc", "Movement", "Strafe")
+local ref = gui.Reference("Misc", "Movement", "Strafe");
 
 local visuals_menu = gui.Reference("visuals", "Gotzy™", "Viewmodel changer")
 local visuals_custom_viewmodel_editor = gui.Checkbox( visuals_menu, "lua_custom_viewmodel_editor", "Custom Viewmodel Editor", 0 );
@@ -599,11 +599,11 @@ local function getVoteEnd(um)
       end
       callbacks.Register("Draw", reset)
 	  
---- Auto updater by ShadyRetard/Shady#0001 aka stole from RageSu
---local function handleUpdates()
+--- Auto updater by ShadyRetard/Shady#0001
+local function handleUpdates()
 
     if (update_available and not update_downloaded) then
-       GOTZY_UPDATER_TEXT:SetText("Update is getting downloaded.")
+        GOTZY_UPDATER_TEXT:SetText("Update is getting downloaded.")
         local new_version_content = http.Get(SCRIPT_FILE_ADDR);
         local old_script = file.Open(SCRIPT_FILE_NAME, "w");
         old_script:Write(new_version_content);
@@ -613,7 +613,7 @@ local function getVoteEnd(um)
     end
 
     if (update_downloaded) then
-        GOTZY_UPDATER_TEXT:SetText("Updates everytime when loaded.")
+        GOTZY_UPDATER_TEXT:SetText("Update available, please reload the script.")
         return;
     end
 
