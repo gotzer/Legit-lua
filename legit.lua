@@ -3,7 +3,7 @@ local SCRIPT_FILE_NAME = GetScriptName();
 local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
 local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/betalegit.lua"
 local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
-local VERSION_NUMBER = "1.25"; --- This too
+local VERSION_NUMBER = "1.24"; --- This too
 local version_check_done = false;
 local update_downloaded = false;
 local update_available = false;
@@ -85,8 +85,6 @@ local GH_CHECKBOX_BOXSTAND = gui.Checkbox( MULTIBOX, "gh_ch_standbox", "Stand Bo
 local GH_CHECKBOX_OOD = gui.Checkbox( MULTIBOX, "gh_ch_standbox_ood", "Stand Box Out of Distance Custom Color Enabled", 1 );
 local GH_CHECKBOX_TEXT = gui.Checkbox( MULTIBOX, "gh_ch_text", "Text Enabled (Name)", 1 );
 local GH_VISUALS_DISTANCE_SL = gui.Slider(MULTIBOX, "gh_max_distance", "Max Distance", 3000, 0, 5000);
-local GH_CHECKBOX_FIXSTRAFE = gui.Checkbox(MULTIBOX, "gh_fix_strafe", "Affect Autostrafe", 1);
-local GH_CHECKBOX_FIXSTRAFEAIR = gui.Checkbox(MULTIBOX, "gh_fix_airstrafe", "Affect Airstrafe", 1);
 local THROW_RADIUS = gui.Slider(MULTIBOX, "gh_box_radius", "GH Box Size", 20, 0, 50);
 
 
