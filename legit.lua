@@ -3,7 +3,7 @@ local SCRIPT_FILE_NAME = GetScriptName();
 local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
 local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/betalegit.lua"
 local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
-local VERSION_NUMBER = "1.22"; --- This too
+local VERSION_NUMBER = "1.23"; --- This too
 local version_check_done = false;
 local update_downloaded = false;
 local update_available = false;
@@ -68,7 +68,8 @@ gui.Checkbox( group_1, "nade_esp", "Grenade ESP", false );
 gui.Checkbox( group_1, "night_mode", "Night mode", false );
 local old_night_mode_value = gui.GetValue( "esp.extra.night_mode" );
 
-local cb = gui.Checkbox(ref,"active", "Active", 0)
+gui.Checkbox( ref,"active", "Strafe fix", 0)
+
 gui.Checkbox( group_1, "vis_sniper_crosshair", "Sniper crosshair", 0)
 
 local xS = gui.Slider(visuals_menu, "lua_x", "X", xO, -20, 20);  
