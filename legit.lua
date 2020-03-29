@@ -6,7 +6,7 @@ local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/ma
 local VERSION_NUMBER = "1.3"; --- This too
 local version_check_done = false;
 local update_downloaded = false;
-local update_available = false;
+local update_available = true;
 local betaUpdateDownloaded = false;
 local isBeta = false;
 
