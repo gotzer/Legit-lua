@@ -3,10 +3,10 @@ local SCRIPT_FILE_NAME = GetScriptName();
 local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
 local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/betalegit.lua"
 local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
-local VERSION_NUMBER = "1.3"; --- This too
+local VERSION_NUMBER = "1.31"; --- This too
 local version_check_done = false;
 local update_downloaded = false;
-local update_available = true;
+local update_available = false;
 local betaUpdateDownloaded = false;
 local isBeta = false;
 
