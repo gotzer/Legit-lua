@@ -86,6 +86,8 @@ local GH_CHECKBOX_OOD = gui.Checkbox( MULTIBOX, "gh_ch_standbox_ood", "Stand Box
 local GH_CHECKBOX_TEXT = gui.Checkbox( MULTIBOX, "gh_ch_text", "Text Enabled (Name)", 1 );
 local GH_VISUALS_DISTANCE_SL = gui.Slider(MULTIBOX, "gh_max_distance", "Max Distance", 3000, 0, 5000);
 local THROW_RADIUS = gui.Slider(MULTIBOX, "gh_box_radius", "GH Box Size", 20, 0, 50);
+local GH_CHECKBOX_FIXSTRAFE = gui.Checkbox(MULTIBOX, "gh_fix_strafe", "Affect Autostrafe", 0);
+local GH_CHECKBOX_FIXSTRAFEAIR = gui.Checkbox(MULTIBOX, "gh_fix_airstrafe", "Affect Airstrafe", 0);
 
 
 local GH_CHECKBOX_KEYBINDS = gui.Checkbox( MULTIBOX, "gh_ch_keybinds", "Enable Keybinds", 0 );
@@ -915,11 +917,25 @@ function showNadeThrows()
 	local myPos = me:GetAbsOrigin();
     local weapon_name = getWeaponName(me);
 
- 
+    if (weapon_name ~= nil and weapon_name ~= "smokegrenade" and weapon_name ~= "flashbang" and weapon_name ~= "molotovgrenade" and weapon_name ~= "hegrenade" and weapon_name ~= "decoy") then
+		if GH_CHECKBOX_FIXSTRAFE:GetValue() then
+			gui.SetValue("misc.strafe.enable", 1);
+		end
+		if GH_CHECKBOX_FIXSTRAFEAIR:GetValue() then
+			gui.SetValue("misc.strafe.air", 1);
+		end
+        return;
+    end
 
 
     local throws_to_show, within_distance = getActiveThrows(maps[current_map_name], me, weapon_name);
 
+	if GH_CHECKBOX_FIXSTRAFE:GetValue() then
+		gui.SetValue("misc.strafe.enable", 1);
+	end
+	if GH_CHECKBOX_FIXSTRAFEAIR:GetValue() then
+		gui.SetValue("misc.strafe.air", 1);
+	end
 	
     for i=1, #throws_to_show do
         local throw = throws_to_show[i];
@@ -928,6 +944,12 @@ function showNadeThrows()
         local cx, cy = client.WorldToScreen(throwVector);
 
         if (within_distance) then
+			if GH_CHECKBOX_FIXSTRAFE:GetValue() then
+				gui.SetValue("misc.strafe.enable", 0);
+			end
+			if GH_CHECKBOX_FIXSTRAFEAIR:GetValue() then
+				gui.SetValue("misc.strafe.air", 0);
+			end
             local z_offset = 64;
             if (throw.type == "crouch") then
                 z_offset = 46;
@@ -1203,7 +1225,7 @@ client.AllowListener("player_say");
 callbacks.Register("FireGameEvent", "GH_EVENT", gameEventHandler);
 callbacks.Register("CreateMove", "GH_MOVE", moveEventHandler);
 callbacks.Register("Draw", "GH_DRAW", drawEventHandler);
-	  
+  
 --- Auto updater by ShadyRetard/Shady#0001
 local function handleUpdates()
 
