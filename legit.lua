@@ -1,6 +1,6 @@
 --- Auto updater Variables
 local SCRIPT_FILE_NAME = GetScriptName();
-local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
+---local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
 local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/betalegit.lua"
 local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
 local VERSION_NUMBER = "1.23"; --- This too
@@ -19,10 +19,6 @@ local GOTZY_CHANGELOG_CONTENT = http.Get("https://raw.githubusercontent.com/gotz
 if GOTZY_CHANGELOG_CONTENT ~= nil or GOTZY_CHANGELOG_CONTENT ~= "" then
     local GOTZY_CHANGELOG_TEXT = gui.Text(GOTZY_UPDATER_GROUP, GOTZY_CHANGELOG_CONTENT)
 end
-
-
-
-
 
 ---Somewhat important variables
 local xO = client.GetConVar("viewmodel_offset_x"); 
@@ -68,7 +64,6 @@ gui.Checkbox( group_1, "nade_esp", "Grenade ESP", false );
 gui.Checkbox( group_1, "night_mode", "Night mode", false );
 local old_night_mode_value = gui.GetValue( "esp.extra.night_mode" );
 
-gui.Checkbox( ref,"active", "Strafe fix", 0)
 
 gui.Checkbox( group_1, "vis_sniper_crosshair", "Sniper crosshair", 0)
 
@@ -76,6 +71,18 @@ local xS = gui.Slider(visuals_menu, "lua_x", "X", xO, -20, 20);
 local yS = gui.Slider(visuals_menu, "lua_y", "Y", yO, -100, 100);  
 local zS = gui.Slider(visuals_menu, "lua_z", "Z", zO, -20, 20);  
 local vfov = gui.Slider(visuals_menu, "vfov", "Viewmodel FOV", fO, 0, 120);
+
+---AutoStrafe
+local pLocal = entities.GetLocalPlayer()
+function js_fix()
+    pLocal = entities.GetLocalPlayer()
+    local velocity = math.sqrt(pLocal:GetPropFloat( "localdata", "m_vecVelocity[0]" )^2 + pLocal:GetPropFloat( "localdata", "m_vecVelocity[1]" )^2)
+    if velocity > 5 then
+        gui.SetValue("misc.strafe.enable", true)
+    else
+        gui.SetValue("misc.strafe.enable", false)
+    end
+end
 
 ---Snipercrosshair
 local function drawing_callback()
@@ -98,21 +105,6 @@ client.SetConVar("weapon_debug_spread_gap", 5, true);
 end
 end
 callbacks.Register("Draw", "force_crosshair_draw", drawing_callback);
-
----AutoStrafe
-local pLocal = entities.GetLocalPlayer()
-function js_fix()
-    pLocal = entities.GetLocalPlayer()
-    local velocity = math.sqrt(pLocal:GetPropFloat( "localdata", "m_vecVelocity[0]" )^2 + pLocal:GetPropFloat( "localdata", "m_vecVelocity[1]" )^2)
-    if velocity > 5 then
-        gui.SetValue("misc.strafe.enable", true)
-    else
-        gui.SetValue("misc.strafe.enable", false)
-    end
-end
-
-callbacks.Register("CreateMove", js_fix)
-callbacks.Register("CreateMove", js_hc)
 
 ---Old esp
 local function GetWpnName( x )
@@ -607,10 +599,10 @@ local function getVoteEnd(um)
       callbacks.Register("Draw", reset)
 
 --- Auto updater by ShadyRetard/Shady#0001 aka stole from RageSu
-local function handleUpdates()
+--local function handleUpdates()
 
     if (update_available and not update_downloaded) then
-        GOTZY_UPDATER_TEXT:SetText("Update is getting downloaded.")
+       GOTZY_UPDATER_TEXT:SetText("Update is getting downloaded.")
         local new_version_content = http.Get(SCRIPT_FILE_ADDR);
         local old_script = file.Open(SCRIPT_FILE_NAME, "w");
         old_script:Write(new_version_content);
