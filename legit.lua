@@ -3,7 +3,7 @@ local SCRIPT_FILE_NAME = GetScriptName();
 ---local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
 local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/betalegit.lua"
 local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
-local VERSION_NUMBER = "1.23"; --- This too
+local VERSION_NUMBER = "1.24"; --- This too
 local version_check_done = false;
 local update_downloaded = false;
 local update_available = false;
@@ -916,25 +916,8 @@ function showNadeThrows()
 	local myPos = me:GetAbsOrigin();
     local weapon_name = getWeaponName(me);
 
-    if (weapon_name ~= nil and weapon_name ~= "smokegrenade" and weapon_name ~= "flashbang" and weapon_name ~= "molotovgrenade" and weapon_name ~= "hegrenade" and weapon_name ~= "decoy") then
-		if GH_CHECKBOX_FIXSTRAFE:GetValue() then
-			gui.SetValue("misc.strafe.enable", 1);
-		end
-		if GH_CHECKBOX_FIXSTRAFEAIR:GetValue() then
-			gui.SetValue("misc.strafe.air", 1);
-		end
-        return;
-    end
-
 
     local throws_to_show, within_distance = getActiveThrows(maps[current_map_name], me, weapon_name);
-
-	if GH_CHECKBOX_FIXSTRAFE:GetValue() then
-		gui.SetValue("misc.strafe.enable", 1);
-	end
-	if GH_CHECKBOX_FIXSTRAFEAIR:GetValue() then
-		gui.SetValue("misc.strafe.air", 1);
-	end
 	
     for i=1, #throws_to_show do
         local throw = throws_to_show[i];
@@ -943,16 +926,6 @@ function showNadeThrows()
         local cx, cy = client.WorldToScreen(throwVector);
 
         if (within_distance) then
-			if GH_CHECKBOX_FIXSTRAFE:GetValue() then
-				gui.SetValue("misc.strafe.enable", 0);
-			end
-			if GH_CHECKBOX_FIXSTRAFEAIR:GetValue() then
-				gui.SetValue("misc.strafe.air", 0);
-			end
-            local z_offset = 64;
-            if (throw.type == "crouch") then
-                z_offset = 46;
-            end
 
             local t_x, t_y, t_z = getThrowPosition(throw.pos.x, throw.pos.y, throw.pos.z, throw.ax, throw.ay, z_offset);
 			local drawVector = Vector3(t_x, t_y, t_z);
