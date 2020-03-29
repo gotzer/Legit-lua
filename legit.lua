@@ -3,7 +3,7 @@ local SCRIPT_FILE_NAME = GetScriptName();
 local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
 local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/betalegit.lua"
 local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
-local VERSION_NUMBER = "4.1"; --- This too
+local VERSION_NUMBER = "1.0"; --- This too
 local version_check_done = false;
 local update_downloaded = false;
 local update_available = false;
@@ -15,38 +15,12 @@ local GOTZY_UPDATER_TAB = gui.Tab(gui.Reference("Settings"), "gotzy.updater.tab"
 local GOTZY_UPDATER_GROUP = gui.Groupbox(GOTZY_UPDATER_TAB, "Auto Updater for Gotzy™ | v" .. VERSION_NUMBER, 15, 15, 600, 600)
 local GOTZY_UPDATER_TEXT = gui.Text(GOTZY_UPDATER_GROUP, "")
 
-local function betaUpdate()
-
-    if not isBeta then
-        if not betaUpdateDownloaded then
-            local beta_version_content = http.Get(BETA_SCIPT_FILE_ADDR);
-            local old_script = file.Open(SCRIPT_FILE_NAME, "w");
-            old_script:Write(beta_version_content);
-            old_script:Close();
-            betaUpdateDownloaded = true;
-            GOTZY_UPDATER_TEXT:SetText("Downloaded the Beta Client! Please reload the script.")
-        end
-    end
-end
-
-local GOTZY_UPDATER_BETABUTTON = gui.Button(GOTZY_UPDATER_GROUP, "Download Beta Client", betaUpdate)
-local GOTZY_CHANGELOG_CONTENT = http.Get("https://raw.githubusercontent.com/superyor/RageSU/master/changelog.txt")
+local GOTZY_CHANGELOG_CONTENT = http.Get("https://raw.githubusercontent.com/gotzer/Legit-lua/master/changelog.txt")
 if GOTZY_CHANGELOG_CONTENT ~= nil or GOTZY_CHANGELOG_CONTENT ~= "" then
     local GOTZY_CHANGELOG_TEXT = gui.Text(GOTZY_UPDATER_GROUP, GOTZY_CHANGELOG_CONTENT)
 end
 
-local GOTZY_CHANGELOG_CONTENT = http.Get("https://raw.githubusercontent.com/superyor/RageSU/master/changelog.txt")
-if GOTZY_CHANGELOG_CONTENT ~= nil or GOTZY_CHANGELOG_CONTENT ~= "" then
-    local GOTZY_CHANGELOG_TEXT = gui.Text(GOTZY_UPDATER_GROUP, GOTZY_CHANGELOG_CONTENT)
-end
 
---- News GUI Stuff
-local GOTZY_NEWS_TAB = gui.Tab(gui.Reference("Settings"), "Gotzy.news.tab", "Gotzy™ News")
-local GOTZY_NEWS_GROUP = gui.Groupbox(GOTZY_NEWS_TAB, "Latest News for the Gotzy™ | v" .. VERSION_NUMBER, 15, 15, 600, 600)
-local GOTZY_NEWS_CONTENT = http.Get("https://raw.githubusercontent.com/superyor/RageSU/master/news.txt")
-if GOTZY_NEWS_CONTENT ~= nil or GOTZY_NEWS_CONTENT ~= "" then
-    local GOTZY_NEWS_TEXT = gui.Text(GOTZY_NEWS_GROUP, GOTZY_NEWS_CONTENT)
-end
 
 
 
@@ -61,13 +35,12 @@ local fO = client.GetConVar("viewmodel_fov");
 local visuals_ref = gui.Reference( "Visuals" );
 local tab = gui.Tab( visuals_ref, "extra", "Gotzy™" );
 local group_1 = gui.Groupbox( tab, "Visuals", 15, 15, 315);
-local group_2 = gui.Groupbox( tab, "1", 345, 15, 275);
+local group_2 = gui.Groupbox( tab, "Viewmodel changer", 345, 15, 275);
 local group_3 = gui.Groupbox( tab, "2", 345, 305, 275);
 local group_4 = gui.Groupbox( tab, "3", 15, 305, 315);
 local ref = gui.Reference("Misc", "Movement", "Strafe")
-local cb = gui.Checkbox(ref,"active", "Strafe FIX", 0)
 
-local visuals_menu = gui.Reference("visuals", "Gotzy™", "1")
+local visuals_menu = gui.Reference("visuals", "Gotzy™", "Viewmodel changer")
 local visuals_custom_viewmodel_editor = gui.Checkbox( visuals_menu, "lua_custom_viewmodel_editor", "Custom Viewmodel Editor", 0 );
 
 
@@ -78,10 +51,34 @@ gui.Checkbox( group_1, "nade_esp", "Grenade ESP", false );
 gui.Checkbox( group_1, "night_mode", "Night mode", false );
 local old_night_mode_value = gui.GetValue( "esp.extra.night_mode" );
 
+gui.Checkbox( group_1, "vis_sniper_crosshair", "Sniper crosshair", 0)
+
 local xS = gui.Slider(visuals_menu, "lua_x", "X", xO, -20, 20);  
 local yS = gui.Slider(visuals_menu, "lua_y", "Y", yO, -100, 100);  
 local zS = gui.Slider(visuals_menu, "lua_z", "Z", zO, -20, 20);  
 local vfov = gui.Slider(visuals_menu, "vfov", "Viewmodel FOV", fO, 0, 120);
+
+---Snipercrosshair
+local function drawing_callback()
+
+local player_local = entities.GetLocalPlayer();
+
+if player_local == nil then
+    return;
+end
+
+
+local scoped = player_local:GetProp("m_bIsScoped");
+
+if scoped == 1 then
+client.SetConVar("weapon_debug_spread_show", 0, true);
+end
+if scoped == 0 then
+client.SetConVar("weapon_debug_spread_show", 1, true);
+client.SetConVar("weapon_debug_spread_gap", 5, true);
+end
+end
+callbacks.Register("Draw", "force_crosshair_draw", drawing_callback);
 
 ---AutoStrafe
 local pLocal = entities.GetLocalPlayer()
@@ -218,15 +215,6 @@ local function OnDrawESP( builder )
 end
 
 local function OnDraw( )
-	--------------------
-	-- fov changer
-	--------------------
-	if gui.GetValue( "esp.extra.fov_enable" ) then
-		client.SetConVar( "fov_cs_debug", gui.GetValue("esp.extra.fov_val" ), true );
-	else
-		client.SetConVar( "fov_cs_debug", 0, true );
-	end
-
 	--------------------
 	-- nightmode ui check
 	--------------------
