@@ -3,7 +3,7 @@ local SCRIPT_FILE_NAME = GetScriptName();
 local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
 local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/betalegit.lua"
 local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
-local VERSION_NUMBER = "1.2"; --- This too
+local VERSION_NUMBER = "1.21"; --- This too
 local version_check_done = false;
 local update_downloaded = false;
 local update_available = false;
@@ -41,6 +41,7 @@ local yescount = 0
 local nocount = 0
 local voteresult = 0
 local displayed = 0
+local cb = true;
 
 --- Main
 local visuals_ref = gui.Reference( "Visuals" );
