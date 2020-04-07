@@ -21,10 +21,11 @@ if GOTZY_CHANGELOG_CONTENT ~= nil or GOTZY_CHANGELOG_CONTENT ~= "" then
 end
 
 ---Somewhat important variables
-local xO = client.GetConVar("viewmodel_offset_x"); 
-local yO = client.GetConVar("viewmodel_offset_y"); 
-local zO = client.GetConVar("viewmodel_offset_z");
-local fO = client.GetConVar("viewmodel_fov");  
+local curFOV = client.GetConVar("fov_cs_debug");
+local curViewmodel = client.GetConVar("viewmodel_fov");
+local curX = client.GetConVar("viewmodel_offset_x");
+local curY = client.GetConVar("viewmodel_offset_y");
+local curZ = client.GetConVar("viewmodel_offset_z");
 local activeVotes = {};
 local font = draw.CreateFont('Arial', 14, 14);
 local votecolor = {};
@@ -68,10 +69,17 @@ local old_night_mode_value = gui.GetValue( "esp.extra.night_mode" );
 ---Other
 gui.Checkbox( group_1, "vis_sniper_crosshair", "Sniper crosshair", 0)
 
-local xS = gui.Slider(visuals_menu, "lua_x", "X", xO, -20, 20);  
-local yS = gui.Slider(visuals_menu, "lua_y", "Y", yO, -100, 100);  
-local zS = gui.Slider(visuals_menu, "lua_z", "Z", zO, -20, 20);  
-local vfov = gui.Slider(visuals_menu, "vfov", "Viewmodel FOV", fO, 0, 120);
+local function fieldofview()
+    if fieldofviewchanger_checkbox:GetValue() and viewfov_slider:GetValue() and viewmodelfov_slider:GetValue() and viewmodeloffsetx_slider:GetValue() and viewmodeloffsety_slider:GetValue() and viewmodeloffsetz_slider:GetValue() then
+        client.SetConVar("fov_cs_debug", viewfov_slider:GetValue(), true)
+        client.SetConVar("viewmodel_fov", viewmodelfov_slider:GetValue(), true);
+        client.SetConVar("viewmodel_offset_x", viewmodeloffsetx_slider:GetValue(), true);
+        client.SetConVar("viewmodel_offset_y", viewmodeloffsety_slider:GetValue(), true);
+        client.SetConVar("viewmodel_offset_z", viewmodeloffsetz_slider:GetValue(), true);
+    end
+end
+
+callbacks.Register("Draw", "Field of View", fieldofview)
 
 ---AutoStrafe
 local pLocal = entities.GetLocalPlayer()
