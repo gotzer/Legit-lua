@@ -3,7 +3,7 @@ local SCRIPT_FILE_NAME = GetScriptName();
 local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
 local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/betalegit.lua"
 local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
-local VERSION_NUMBER = "1.44"; --- This too
+local VERSION_NUMBER = "1.45"; --- This too
 local version_check_done = false;
 local update_downloaded = false;
 local update_available = false;
@@ -21,11 +21,10 @@ if GOTZY_CHANGELOG_CONTENT ~= nil or GOTZY_CHANGELOG_CONTENT ~= "" then
 end
 
 ---Somewhat important variables
-local curFOV = client.GetConVar("fov_cs_debug");
-local curViewmodel = client.GetConVar("viewmodel_fov");
-local curX = client.GetConVar("viewmodel_offset_x");
-local curY = client.GetConVar("viewmodel_offset_y");
-local curZ = client.GetConVar("viewmodel_offset_z");
+local xO = client.GetConVar("viewmodel_offset_x"); 
+local yO = client.GetConVar("viewmodel_offset_y"); 
+local zO = client.GetConVar("viewmodel_offset_z");
+local fO = client.GetConVar("viewmodel_fov");  
 local activeVotes = {};
 local font = draw.CreateFont('Arial', 14, 14);
 local votecolor = {};
@@ -69,17 +68,10 @@ local old_night_mode_value = gui.GetValue( "esp.extra.night_mode" );
 ---Other
 gui.Checkbox( group_1, "vis_sniper_crosshair", "Sniper crosshair", 0)
 
-local function fieldofview()
-    if fieldofviewchanger_checkbox:GetValue() and viewfov_slider:GetValue() and viewmodelfov_slider:GetValue() and viewmodeloffsetx_slider:GetValue() and viewmodeloffsety_slider:GetValue() and viewmodeloffsetz_slider:GetValue() then
-        client.SetConVar("fov_cs_debug", viewfov_slider:GetValue(), true)
-        client.SetConVar("viewmodel_fov", viewmodelfov_slider:GetValue(), true);
-        client.SetConVar("viewmodel_offset_x", viewmodeloffsetx_slider:GetValue(), true);
-        client.SetConVar("viewmodel_offset_y", viewmodeloffsety_slider:GetValue(), true);
-        client.SetConVar("viewmodel_offset_z", viewmodeloffsetz_slider:GetValue(), true);
-    end
-end
-
-callbacks.Register("Draw", "Field of View", fieldofview)
+local xS = gui.Slider(visuals_menu, "lua_x", "X", xO, -20, 20);  
+local yS = gui.Slider(visuals_menu, "lua_y", "Y", yO, -100, 100);  
+local zS = gui.Slider(visuals_menu, "lua_z", "Z", zO, -20, 20);  
+local vfov = gui.Slider(visuals_menu, "vfov", "Viewmodel FOV", fO, 0, 120);
 
 ---AutoStrafe
 local pLocal = entities.GetLocalPlayer()
@@ -287,22 +279,16 @@ callbacks.Register( "Draw", OnDraw );
 callbacks.Register( "FireGameEvent", OnEvent );
 
 ---Fov Changer
-local function Visuals_Viewmodel()
-
-   if visuals_custom_viewmodel_editor:GetValue() then 
-client.SetConVar("viewmodel_offset_x", xS:GetValue(), true);
-client.SetConVar("viewmodel_offset_y", yS:GetValue(), true);
-client.SetConVar("viewmodel_offset_z", zS:GetValue(), true);
-client.SetConVar("viewmodel_fov", vfov:GetValue(), true);
-   end
-   end
-local function Visuals_Disable_Post_Processing()
-       if visuals_disable_post_processing:GetValue() then 
-           client.SetConVar( "mat_postprocess_enable", 0, true );
-   else
-       client.SetConVar( "mat_postprocess_enable", 1, true );
-       end
-   end
+-- Field of View Changer by GhostZ (https://aimware.net/forum/user-271217.html)
+local function fieldofview()
+    if fieldofviewchanger_checkbox:GetValue() and viewfov_slider:GetValue() and viewmodelfov_slider:GetValue() and viewmodeloffsetx_slider:GetValue() and viewmodeloffsety_slider:GetValue() and viewmodeloffsetz_slider:GetValue() then
+        client.SetConVar("fov_cs_debug", viewfov_slider:GetValue(), true)
+        client.SetConVar("viewmodel_fov", viewmodelfov_slider:GetValue(), true);
+        client.SetConVar("viewmodel_offset_x", viewmodeloffsetx_slider:GetValue(), true);
+        client.SetConVar("viewmodel_offset_y", viewmodeloffsety_slider:GetValue(), true);
+        client.SetConVar("viewmodel_offset_z", viewmodeloffsetz_slider:GetValue(), true);
+    end
+end
 
 callbacks.Register("Draw", "Custom Viewmodel Editor", Visuals_Viewmodel)
 
