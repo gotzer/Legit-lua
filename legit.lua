@@ -21,10 +21,11 @@ if GOTZY_CHANGELOG_CONTENT ~= nil or GOTZY_CHANGELOG_CONTENT ~= "" then
 end
 
 ---Somewhat important variables
-local xO = client.GetConVar("viewmodel_offset_x"); 
-local yO = client.GetConVar("viewmodel_offset_y"); 
-local zO = client.GetConVar("viewmodel_offset_z");
-local fO = client.GetConVar("viewmodel_fov");  
+local curFOV = client.GetConVar("fov_cs_debug");
+local curViewmodel = client.GetConVar("viewmodel_fov");
+local curX = client.GetConVar("viewmodel_offset_x");
+local curY = client.GetConVar("viewmodel_offset_y");
+local curZ = client.GetConVar("viewmodel_offset_z");
 local activeVotes = {};
 local font = draw.CreateFont('Arial', 14, 14);
 local votecolor = {};
@@ -49,8 +50,12 @@ local group_4 = gui.Groupbox( tab, "3", 15, 305, 315);
 local ref = gui.Reference("Misc", "Movement", "Strafe");
 
 local visuals_menu = gui.Reference("visuals", "Gotzy™", "Viewmodel changer")
-local visuals_custom_viewmodel_editor = gui.Checkbox( visuals_menu, "lua_custom_viewmodel_editor", "Custom Viewmodel Editor", 0 );
-
+local fieldofviewchanger_checkbox = gui.Checkbox(visuals_menu, "fieldofviewchanger", "Enable", false)
+local viewfov_slider = gui.Slider(fieldofviewchanger_groupbox, "viewfov", "View", curFOV, 0, 120 )
+local viewmodelfov_slider = gui.Slider(fieldofviewchanger_groupbox, "viewmodelfov", "Viewmodel", curViewmodel, 0, 120)
+local viewmodeloffsetx_slider = gui.Slider(fieldofviewchanger_groupbox, "viewmodeloffsetx", "Viewmodel X Offset", curX, -10, 10, 0.1);
+local viewmodeloffsety_slider = gui.Slider(fieldofviewchanger_groupbox, "viewmodeloffsety", "Viewmodel Y Offset", curY, -10, 10, 0.1);
+local viewmodeloffsetz_slider = gui.Slider(fieldofviewchanger_groupbox, "viewmodeloffsetz", "Viewmodel Z Offset", curZ, -10, 10, 0.1);
 local g_Group = gui.Groupbox(gui.Reference("MISC", "Enhancement"), "Vote Revealer", 327,315, 297)
 local g_BroadcastMode = gui.Combobox(g_Group, "msc_voterevealer_broadcast", "Vote Revealer Broadcast Mode", "Off", "Broadcast Team", "Broadcast All", "Broadcast Console")
 local g_Draw = gui.Checkbox(g_Group, "msc_voterevealer_draw", "Vote Revealer Draw", false)
