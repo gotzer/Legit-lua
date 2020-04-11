@@ -3,7 +3,7 @@ local SCRIPT_FILE_NAME = GetScriptName();
 local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
 local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/betalegit.lua"
 local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
-local VERSION_NUMBER = "1.47"; --- This too
+local VERSION_NUMBER = "1.50"; --- This too
 local version_check_done = false;
 local update_downloaded = false;
 local update_available = false;
@@ -21,11 +21,6 @@ if GOTZY_CHANGELOG_CONTENT ~= nil or GOTZY_CHANGELOG_CONTENT ~= "" then
 end
 
 ---Somewhat important variables
-local curFOV = client.GetConVar("fov_cs_debug");
-local curViewmodel = client.GetConVar("viewmodel_fov");
-local curX = client.GetConVar("viewmodel_offset_x");
-local curY = client.GetConVar("viewmodel_offset_y");
-local curZ = client.GetConVar("viewmodel_offset_z");
 local activeVotes = {};
 local font = draw.CreateFont('Arial', 14, 14);
 local votecolor = {};
@@ -39,6 +34,13 @@ local nocount = 0
 local voteresult = 0
 local displayed = 0
 
+-- Field of View Changer GetConVars
+local curFOV = client.GetConVar("fov_cs_debug");
+local curViewmodel = client.GetConVar("viewmodel_fov");
+local curX = client.GetConVar("viewmodel_offset_x");
+local curY = client.GetConVar("viewmodel_offset_y");
+local curZ = client.GetConVar("viewmodel_offset_z");
+
 
 --- Main
 local visuals_ref = gui.Reference( "Visuals" );
@@ -50,12 +52,13 @@ local group_4 = gui.Groupbox( tab, "3", 15, 305, 315);
 local ref = gui.Reference("Misc", "Movement", "Strafe");
 
 local visuals_menu = gui.Reference("visuals", "Gotzy™", "Viewmodel changer")
-local fieldofviewchanger_checkbox = gui.Checkbox(group_3, "fieldofviewchanger", "Enable", false)
-local viewfov_slider = gui.Slider(group_3, "viewfov", "View", curFOV, 0, 120 )
-local viewmodelfov_slider = gui.Slider(group_3, "viewmodelfov", "Viewmodel", curViewmodel, 0, 120)
-local viewmodeloffsetx_slider = gui.Slider(group_3, "viewmodeloffsetx", "Viewmodel X Offset", curX, -10, 10, 0.1);
-local viewmodeloffsety_slider = gui.Slider(group_3, "viewmodeloffsety", "Viewmodel Y Offset", curY, -10, 10, 0.1);
-local viewmodeloffsetz_slider = gui.Slider(group_3, "viewmodeloffsetz", "Viewmodel Z Offset", curZ, -10, 10, 0.1);
+local fieldofviewchanger_checkbox = gui.Checkbox(visuals_menu, "fieldofviewchanger", "Enable", false)
+local viewfov_slider = gui.Slider(visuals_menu, "viewfov", "View", curFOV, 0, 120 )
+local viewmodelfov_slider = gui.Slider(visuals_menu, "viewmodelfov", "Viewmodel", curViewmodel, 0, 120)
+local viewmodeloffsetx_slider = gui.Slider(visuals_menu, "viewmodeloffsetx", "Viewmodel X Offset", curX, -10, 10, 0.1);
+local viewmodeloffsety_slider = gui.Slider(visuals_menu, "viewmodeloffsety", "Viewmodel Y Offset", curY, -10, 10, 0.1);
+local viewmodeloffsetz_slider = gui.Slider(visuals_menu, "viewmodeloffsetz", "Viewmodel Z Offset", curZ, -10, 10, 0.1);
+
 local g_Group = gui.Groupbox(gui.Reference("MISC", "Enhancement"), "Vote Revealer", 327,315, 297)
 local g_BroadcastMode = gui.Combobox(g_Group, "msc_voterevealer_broadcast", "Vote Revealer Broadcast Mode", "Off", "Broadcast Team", "Broadcast All", "Broadcast Console")
 local g_Draw = gui.Checkbox(g_Group, "msc_voterevealer_draw", "Vote Revealer Draw", false)
@@ -71,12 +74,6 @@ gui.Checkbox( group_1, "night_mode", "Night mode", false );
 local old_night_mode_value = gui.GetValue( "esp.extra.night_mode" );
 
 ---Other
-gui.Checkbox( group_1, "vis_sniper_crosshair", "Sniper crosshair", 0)
-
-local xS = gui.Slider(visuals_menu, "lua_x", "X", xO, -20, 20);  
-local yS = gui.Slider(visuals_menu, "lua_y", "Y", yO, -100, 100);  
-local zS = gui.Slider(visuals_menu, "lua_z", "Z", zO, -20, 20);  
-local vfov = gui.Slider(visuals_menu, "vfov", "Viewmodel FOV", fO, 0, 120);
 
 ---AutoStrafe
 local pLocal = entities.GetLocalPlayer()
@@ -283,8 +280,7 @@ callbacks.Register( "DrawESP", OnDrawESP );
 callbacks.Register( "Draw", OnDraw );
 callbacks.Register( "FireGameEvent", OnEvent );
 
----Fov Changer
--- Field of View Changer by GhostZ (https://aimware.net/forum/user-271217.html)
+---Fov
 local function fieldofview()
     if fieldofviewchanger_checkbox:GetValue() and viewfov_slider:GetValue() and viewmodelfov_slider:GetValue() and viewmodeloffsetx_slider:GetValue() and viewmodeloffsety_slider:GetValue() and viewmodeloffsetz_slider:GetValue() then
         client.SetConVar("fov_cs_debug", viewfov_slider:GetValue(), true)
@@ -294,6 +290,8 @@ local function fieldofview()
         client.SetConVar("viewmodel_offset_z", viewmodeloffsetz_slider:GetValue(), true);
     end
 end
+
+callbacks.Register("Draw", "Field of View", fieldofview)
 
 callbacks.Register("Draw", "Custom Viewmodel Editor", Visuals_Viewmodel)
 
