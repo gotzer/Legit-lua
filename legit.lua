@@ -3,7 +3,7 @@ local SCRIPT_FILE_NAME = GetScriptName();
 local SCRIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/legit.lua";
 local BETA_SCIPT_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/betalegit.lua"
 local VERSION_FILE_ADDR = "https://raw.githubusercontent.com/gotzer/Legit-lua/master/version.txt"; --- in case of update i need to update this. (Note by superyu'#7167 "so i don't forget it."
-local VERSION_NUMBER = "1.50"; --- This too
+local VERSION_NUMBER = "1.51"; --- This too
 local version_check_done = false;
 local update_downloaded = false;
 local update_available = false;
@@ -80,12 +80,11 @@ local pLocal = entities.GetLocalPlayer()
 function js_fix()
     pLocal = entities.GetLocalPlayer()
     local velocity = math.sqrt(pLocal:GetPropFloat( "localdata", "m_vecVelocity[0]" )^2 + pLocal:GetPropFloat( "localdata", "m_vecVelocity[1]" )^2)
-
     if velocity > 5 then
-        gui.SetValue("misc.strafe.enable", true)
-    else
-        gui.SetValue("misc.strafe.enable", false)
-    end
+      gui.SetValue("misc.strafe.enable", true)
+  else
+      gui.SetValue("misc.strafe.enable", false)
+  end
 end
 
 ---Snipercrosshair
